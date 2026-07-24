@@ -26,6 +26,25 @@ export default function PageTransition({ children }: { children: React.ReactNode
     }
   }, []);
 
+  // Prefetch all internal links on mount and whenever DOM changes
+  useEffect(() => {
+    const prefetchAll = () => {
+      document.querySelectorAll("a[href]").forEach((anchor) => {
+        const href = anchor.getAttribute("href");
+        if (!href || href.startsWith("http") || href.startsWith("#")) return;
+        router.prefetch(href);
+      });
+    };
+
+    prefetchAll();
+
+    // Re-run if new links are added to the DOM dynamically
+    const observer = new MutationObserver(prefetchAll);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
+  }, [router]);
+
   // Prefetch route on hover
   const handleMouseOver = useCallback((e: MouseEvent) => {
     const anchor = (e.target as HTMLElement).closest("a");
