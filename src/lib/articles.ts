@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase, isPlaceholder } from './supabase'
 
 export interface Article {
   id: string | number
@@ -102,6 +102,8 @@ export function mapArticle(article: Article): FrontendArticle {
 export const revalidate = 60;
 
 export async function getArticles(category?: string, page: number = 1, pageSize: number = 10): Promise<FrontendArticle[]> {
+  if (isPlaceholder) return []
+
   try {
     let query = supabase.from('articles').select('*')
     
@@ -128,6 +130,8 @@ export async function getArticles(category?: string, page: number = 1, pageSize:
 }
 
 export async function getArticleById(id: string | number): Promise<FrontendArticle | null> {
+  if (isPlaceholder) return null
+
   try {
     const { data, error } = await supabase
       .from('articles')
@@ -150,6 +154,8 @@ export async function getArticleById(id: string | number): Promise<FrontendArtic
 }
 
 export async function getLatestArticles(limit: number = 10): Promise<FrontendArticle[]> {
+  if (isPlaceholder) return []
+
   try {
     const { data, error } = await supabase
       .from('articles')
@@ -169,6 +175,8 @@ export async function getLatestArticles(limit: number = 10): Promise<FrontendArt
 }
 
 export async function getArticlesCount(category?: string): Promise<number> {
+  if (isPlaceholder) return 0
+
   try {
     let query = supabase.from('articles').select('id', { count: 'exact', head: true })
     
@@ -189,6 +197,8 @@ export async function getArticlesCount(category?: string): Promise<number> {
 }
 
 export async function searchArticles(query: string): Promise<FrontendArticle[]> {
+  if (isPlaceholder) return []
+
   try {
     const { data, error } = await supabase
       .from('articles')
