@@ -1,4 +1,7 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
+
+const DEFAULT_URL = 'https://msypsrswdlvamjzgqgpg.supabase.co';
+const DEFAULT_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zeXBzcnN3ZGx2YW1qemdxZ3BnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2MTY1NjQsImV4cCI6MjEwMDE5MjU2NH0.6eoQumKkCpKZLZ2bUHpp3Dl7j6FlzcGXDpBefsHlv44';
 
 let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 let supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -10,23 +13,23 @@ if (supabaseUrl && supabaseUrl.startsWith('postgresql://')) {
   }
 }
 
-const hasInvalidUrl = !supabaseUrl || 
-                       supabaseUrl === 'undefined' || 
-                       supabaseUrl === 'null' || 
-                       (!supabaseUrl.startsWith('http://') && !supabaseUrl.startsWith('https://'));
+const isInvalidUrl = !supabaseUrl || 
+                     supabaseUrl === 'undefined' || 
+                     supabaseUrl === 'null' || 
+                     (!supabaseUrl.startsWith('http://') && !supabaseUrl.startsWith('https://'));
 
-const hasInvalidKey = !supabaseAnonKey || 
-                       supabaseAnonKey === 'undefined' || 
-                       supabaseAnonKey === 'null';
+const isInvalidKey = !supabaseAnonKey || 
+                     supabaseAnonKey === 'undefined' || 
+                     supabaseAnonKey === 'null';
 
-if (hasInvalidUrl) {
-  supabaseUrl = 'https://placeholder-project-url-for-build.supabase.co';
+if (isInvalidUrl) {
+  supabaseUrl = DEFAULT_URL;
 }
 
-if (hasInvalidKey) {
-  supabaseAnonKey = 'placeholder-anon-key-for-build';
+if (isInvalidKey) {
+  supabaseAnonKey = DEFAULT_ANON_KEY;
 }
 
-export const isPlaceholder = hasInvalidUrl || hasInvalidKey || supabaseUrl.includes('placeholder-project-url-for-build');
+export const isPlaceholder = false;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
