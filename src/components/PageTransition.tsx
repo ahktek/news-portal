@@ -33,6 +33,15 @@ export default function PageTransition({ children }: { children: React.ReactNode
     router.prefetch(href);
   }, [router]);
 
+  // Prefetch on mobile touchstart
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    const anchor = (e.target as HTMLElement).closest("a");
+    if (!anchor) return;
+    const href = anchor.getAttribute("href");
+    if (!href || href.startsWith("http") || href.startsWith("#")) return;
+    router.prefetch(href);
+  }, [router]);
+
   const handleClick = useCallback(
     (e: MouseEvent) => {
       const anchor = (e.target as HTMLElement).closest("a");
@@ -63,24 +72,14 @@ export default function PageTransition({ children }: { children: React.ReactNode
 
   useEffect(() => {
     document.addEventListener("mouseover", handleMouseEnter, true);
+    document.addEventListener("touchstart", handleTouchStart, true);
     document.addEventListener("click", handleClick, true);
     return () => {
       document.removeEventListener("mouseover", handleMouseEnter, true);
+      document.removeEventListener("touchstart", handleTouchStart, true);
       document.removeEventListener("click", handleClick, true);
     };
-  }, [handleClick, handleMouseEnter]);
-
-  const handleTouchStart = useCallback((e: TouchEvent) => {
-    const anchor = (e.target as HTMLElement).closest("a");
-    if (!anchor) return;
-    const href = anchor.getAttribute("href");
-    if (!href || href.startsWith("http") || href.startsWith("#")) return;
-    router.prefetch(href);
-  }, [router]);
-
-  // in the effect:
-  document.addEventListener("touchstart", handleTouchStart, true);
-  // cleanup too
+  }, [handleClick, handleMouseEnter, handleTouchStart]);
 
   return (
     <>
@@ -95,6 +94,5 @@ export default function PageTransition({ children }: { children: React.ReactNode
       </div>
     </>
   );
-
 }
 
