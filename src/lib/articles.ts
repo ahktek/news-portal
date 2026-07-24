@@ -102,77 +102,107 @@ export function mapArticle(article: Article): FrontendArticle {
 export const revalidate = 60;
 
 export async function getArticles(category?: string, page: number = 1, pageSize: number = 10): Promise<FrontendArticle[]> {
-  let query = supabase.from('articles').select('*')
-  
-  if (category) {
-    query = query.ilike('category', category)
+  try {
+    let query = supabase.from('articles').select('*')
+    
+    if (category) {
+      query = query.ilike('category', category)
+    }
+    
+    query = query.order('created_at', { ascending: false })
+    
+    const from = (page - 1) * pageSize
+    const to = from + pageSize - 1
+    query = query.range(from, to)
+    
+    const { data, error } = await query
+    if (error) {
+      console.error('Supabase Error in getArticles:', error)
+      return []
+    }
+    return (data || []).map(mapArticle)
+  } catch (err) {
+    console.error('Unhandled Exception in getArticles:', err)
+    return []
   }
-  
-  query = query.order('created_at', { ascending: false })
-  
-  const from = (page - 1) * pageSize
-  const to = from + pageSize - 1
-  query = query.range(from, to)
-  
-  const { data, error } = await query
-  if (error) {
-    throw error
-  }
-  return (data || []).map(mapArticle)
 }
 
 export async function getArticleById(id: string | number): Promise<FrontendArticle | null> {
-  const { data, error } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('id', id)
-    .single()
-  
-  if (error) {
-    if (error.code === 'PGRST116') {
+  try {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('id', id)
+      .single()
+    
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return null
+      }
+      console.error('Supabase Error in getArticleById:', error)
       return null
     }
-    throw error
+    return mapArticle(data)
+  } catch (err) {
+    console.error('Unhandled Exception in getArticleById:', err)
+    return null
   }
-  return mapArticle(data)
 }
 
 export async function getLatestArticles(limit: number = 10): Promise<FrontendArticle[]> {
-  const { data, error } = await supabase
-    .from('articles')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(limit)
-  
-  if (error) {
-    throw error
+  try {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(limit)
+    
+    if (error) {
+      console.error('Supabase Error in getLatestArticles:', error)
+      return []
+    }
+    return (data || []).map(mapArticle)
+  } catch (err) {
+    console.error('Unhandled Exception in getLatestArticles:', err)
+    return []
   }
-  return (data || []).map(mapArticle)
 }
 
 export async function getArticlesCount(category?: string): Promise<number> {
-  let query = supabase.from('articles').select('id', { count: 'exact', head: true })
-  
-  if (category) {
-    query = query.ilike('category', category)
+  try {
+    let query = supabase.from('articles').select('id', { count: 'exact', head: true })
+    
+    if (category) {
+      query = query.ilike('category', category)
+    }
+    
+    const { count, error } = await query
+    if (error) {
+      console.error('Supabase Error in getArticlesCount:', error)
+      return 0
+    }
+    return count || 0
+  } catch (err) {
+    console.error('Unhandled Exception in getArticlesCount:', err)
+    return 0
   }
-  
-  const { count, error } = await query
-  if (error) {
-    throw error
-  }
-  return count || 0
 }
 
 export async function searchArticles(query: string): Promise<FrontendArticle[]> {
-  const { data, error } = await supabase
-    .from('articles')
-    .select('*')
-    .ilike('title', `%${query}%`)
-    .order('created_at', { ascending: false })
-  
-  if (error) {
-    throw error
+  try {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('*')
+      .ilike('title', `%${query}%`)
+      .order('created_at', { ascending: false })
+    
+    if (error) {
+      console.error('Supabase Error in searchArticles:', error)
+      return []
+    }
+    return (data || []).map(mapArticle)
+  } catch (err) {
+    console.error('Unhandled Exception in searchArticles:', err)
+    return []
   }
-  return (data || []).map(mapArticle)
 }
