@@ -27,7 +27,7 @@ export default function RootLayout({
         />
         <link rel="alternate" type="application/rss+xml" title="TANGENT RSS Feed" href="/feed.xml" />
       </head>
-      <body className="min-h-screen flex flex-col bg-neutral-bg text-zinc-900 dark:text-zinc-200 transition-colors duration-300">
+      <body className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100 transition-colors duration-300">
         <ThemeProvider>
           <a href="#main-content" className="skip-to-content">
             সরাসরি মূল কনটেন্টে যান

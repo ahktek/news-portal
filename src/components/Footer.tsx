@@ -14,7 +14,7 @@ export default function Footer() {
   const isSectionOpen = (section: string) => openSection === section;
 
   return (
-    <footer className="bg-zinc-950 text-white mt-16 border-t border-zinc-800">
+    <footer className="bg-slate-900 text-slate-100 dark:bg-[#0b0f19] dark:text-slate-100 mt-16 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Responsive layout: stacked accordion on mobile, 3-column grid on desktop */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">

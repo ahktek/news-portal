@@ -21,15 +21,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const savedTheme = localStorage.getItem("theme") as Theme;
     if (savedTheme) {
       setTheme(savedTheme);
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setTheme("dark");
     }
     setMounted(true);
   }, []);
 
   useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
     if (mounted) {
-      document.documentElement.classList.toggle("dark", theme === "dark");
       localStorage.setItem("theme", theme);
     }
   }, [theme, mounted]);
