@@ -54,19 +54,19 @@ export default function CommentSection({ articleId }: { articleId: string }) {
   return (
     <div>
       <div className="flex items-center gap-4 mb-6">
-        <h2 className="text-lg font-bold tracking-tight text-tangent-black">মন্তব্য ও আলোচনা</h2>
+        <h2 className="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100">মন্তব্য ও আলোচনা</h2>
         <hr className="cobalt-rule" />
       </div>
 
-      <form onSubmit={handleSubmit} className="mb-8 bg-white border border-tangent-border p-4 rounded-lg shadow-2xs">
-        <h3 className="text-sm font-bold mb-3 text-tangent-black">আপনার মতামত দিন</h3>
+      <form onSubmit={handleSubmit} className="mb-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-2xs">
+        <h3 className="text-sm font-bold mb-3 text-slate-900 dark:text-slate-100">আপনার মতামত দিন</h3>
         <div className="mb-3">
           <input
             type="text"
             value={authorName}
             onChange={(e) => setAuthorName(e.target.value)}
             placeholder="আপনার নাম"
-            className="admin-input text-sm"
+            className="admin-input text-sm text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
             required
             maxLength={50}
           />
@@ -76,12 +76,12 @@ export default function CommentSection({ articleId }: { articleId: string }) {
             value={body}
             onChange={(e) => setBody(e.target.value)}
             placeholder="মতামত লিখুন..."
-            className="admin-input text-sm resize-y min-h-[80px]"
+            className="admin-input text-sm resize-y min-h-[80px] text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
             required
             maxLength={2000}
           />
         </div>
-        {error && <p className="text-tangent-red text-xs mb-2">{error}</p>}
+        {error && <p className="text-accent-primary text-xs mb-2">{error}</p>}
         <button
           type="submit"
           disabled={!authorName.trim() || !body.trim()}
@@ -93,15 +93,15 @@ export default function CommentSection({ articleId }: { articleId: string }) {
 
       <div className="space-y-4">
         {comments.length === 0 && (
-          <p className="text-tangent-slate text-sm">কোনো মন্তব্য পাওয়া যায়নি। প্রথম মন্তব্যকারী হোন।</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">কোনো মন্তব্য পাওয়া যায়নি। প্রথম মন্তব্যকারী হোন।</p>
         )}
         {comments.map((comment) => (
           <div key={comment.id} className="comment-bubble py-3 animate-fade-in">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-bold text-sm text-tangent-black">{comment.authorName}</span>
-              <span className="text-xs text-tangent-slate">{formatDate(comment.createdAt)}</span>
+              <span className="font-bold text-sm text-slate-900 dark:text-slate-100">{comment.authorName}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">{formatDate(comment.createdAt)}</span>
             </div>
-            <p className="text-sm leading-relaxed text-tangent-slate">{comment.body}</p>
+            <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{comment.body}</p>
           </div>
         ))}
       </div>

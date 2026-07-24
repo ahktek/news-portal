@@ -65,7 +65,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
       setTimeout(() => {
         router.push(pendingHref.current!);
         pendingHref.current = null;
-      }, 400);
+      }, 10);
 
       // End animation after full duration
       setTimeout(() => {

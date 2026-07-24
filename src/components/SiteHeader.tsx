@@ -46,10 +46,10 @@ export default function SiteHeader() {
       
       {/* ─── TOP HEADER ROW (Social, Logo, Subscribe) ─── */}
       <div className="border-b border-slate-100 dark:border-slate-800/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
           
           {/* Social Icons (Desktop) */}
-          <div className="hidden md:flex items-center gap-3 text-slate-400 dark:text-slate-500 text-xs">
+          <div className="hidden md:flex items-center gap-3 text-slate-400 dark:text-slate-500 text-xs md:w-1/4">
             <a href="#" className="hover:text-accent-primary transition-colors" aria-label="Facebook">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8H7v3h2v9h3v-9h3l.5-3H12V6c0-.88.39-1 1-1h2V2h-3c-2.9 0-5 1.55-5 4.5V8z"/></svg>
             </a>
@@ -65,7 +65,7 @@ export default function SiteHeader() {
           </div>
 
           {/* Centered Brand Logo */}
-          <Link href="/" className="no-underline flex items-center gap-1.5 mx-auto md:mx-0">
+          <Link href="/" className="no-underline flex items-center justify-center gap-1.5 md:w-2/4">
             <span className="font-sans text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
               TANGENT<span className="text-accent-primary">.</span>
             </span>
@@ -75,8 +75,8 @@ export default function SiteHeader() {
           </Link>
 
           {/* Subscribe & Login buttons */}
-          <div className="flex items-center gap-3">
-            <button className="text-xs font-extrabold bg-accent-primary text-white hover:bg-accent-hover px-4 py-2 rounded-full shadow-xs transition-all duration-200">
+          <div className="flex items-center justify-end gap-3 md:w-1/4">
+            <button className="text-xs font-extrabold bg-accent-primary text-white hover:bg-accent-hover px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-xs transition-all duration-200">
               সাবস্ক্রাইব
             </button>
             <button className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-accent-primary transition-colors hidden sm:block">
@@ -89,14 +89,14 @@ export default function SiteHeader() {
 
       {/* ─── MAIN STICKY NAVIGATION ROW ─── */}
       <div className={`sticky top-0 z-50 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur border-b transition-all duration-200 ${
-        scrolled ? "shadow-md border-transparent" : "border-slate-100 dark:border-slate-800"
+        scrolled ? "shadow-md border-slate-200/60 dark:border-slate-800" : "border-slate-100 dark:border-slate-800"
       }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-3">
           
           {/* Hamburger Menu button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 text-slate-700 dark:text-slate-200 hover:text-accent-primary transition-colors rounded-lg lg:hidden"
+            className="p-1.5 text-slate-700 dark:text-slate-200 hover:text-accent-primary transition-colors rounded-lg lg:hidden flex-shrink-0"
             aria-label="Toggle mobile navigation"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -110,7 +110,7 @@ export default function SiteHeader() {
 
           {/* Category Navigation Strip */}
           <nav
-            className="flex-1 overflow-x-auto whitespace-nowrap scrollbar-none flex items-center gap-5 sm:gap-7 py-1"
+            className="flex-1 min-w-0 overflow-x-auto whitespace-nowrap scrollbar-none flex items-center gap-4 sm:gap-6 py-1"
             aria-label="Primary navigation"
           >
             <Link
@@ -137,13 +137,13 @@ export default function SiteHeader() {
           </nav>
 
           {/* Search & Dark Mode Toggle Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 flex-shrink-0">
             {/* Inline Search Input */}
             <div className="flex items-center justify-end relative">
               <form
                 onSubmit={handleSearchSubmit}
                 className={`flex items-center bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden transition-all duration-300 ${
-                  searchOpen ? "w-44 sm:w-60 px-3 py-1" : "w-0 opacity-0 pointer-events-none"
+                  searchOpen ? "w-36 sm:w-56 px-3 py-1 border border-slate-200 dark:border-slate-700" : "w-0 opacity-0 pointer-events-none"
                 }`}
               >
                 <input
@@ -152,9 +152,9 @@ export default function SiteHeader() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="খুঁজুন..."
-                  className="w-full bg-transparent text-xs py-1 focus:outline-none text-slate-900 dark:text-slate-100"
+                  className="w-full bg-transparent text-xs py-0.5 focus:outline-none text-slate-900 dark:text-slate-100"
                 />
-                <button type="submit" className="text-slate-500 hover:text-accent-primary p-0.5">
+                <button type="submit" className="text-slate-500 dark:text-slate-400 hover:text-accent-primary p-0.5">
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>

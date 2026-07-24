@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ─── TANGENT Design Tokens ───
  * Publication: Independent tech-culture zine
  * Voice: Sharp, opinionated, human
@@ -153,28 +155,37 @@ body {
   height: 2.5rem;
   font-size: 0.875rem;
   font-weight: 600;
-  border-radius: 4px;
-  transition: background 0.15s;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
 }
 
 .pagination a {
-  background: var(--color-tangent-warm);
-  color: var(--color-tangent-black);
+  background: #f1f5f9;
+  color: #0f172a;
   text-decoration: none;
 }
 
+.dark .pagination a {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
 .pagination a:hover {
-  background: var(--color-tangent-border);
+  background: #e2e8f0;
+}
+
+.dark .pagination a:hover {
+  background: #334155;
 }
 
 .pagination .active {
-  background: var(--color-tangent-cobalt);
+  background: var(--color-accent-primary);
   color: white;
 }
 
 /* Comment styles */
 .comment-bubble {
-  border-left: 3px solid var(--color-tangent-cobalt);
+  border-left: 3px solid var(--color-accent-primary);
   padding-left: 1rem;
 }
 
@@ -182,17 +193,23 @@ body {
 .admin-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--color-tangent-border);
-  border-radius: 4px;
-  font-family: var(--font-display);
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: var(--font-sans);
   font-size: 0.875rem;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.dark .admin-input {
+  border-color: #334155;
+  background-color: #1e293b;
+  color: #f8fafc;
 }
 
 .admin-input:focus {
   outline: none;
-  border-color: var(--color-tangent-cobalt);
-  box-shadow: 0 0 0 3px rgba(26, 58, 255, 0.1);
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.15);
 }
 
 .admin-btn {

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 
 type Theme = "light" | "dark";
 
@@ -17,17 +17,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme") as Theme;
-    if (saved === "dark") {
-      setTheme("dark");
+    const saved = localStorage.getItem("theme") as Theme | null;
+    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initialTheme: Theme = saved === "dark" || (!saved && systemDark) ? "dark" : "light";
+
+    setTheme(initialTheme);
+    if (initialTheme === "dark") {
       document.documentElement.classList.add("dark");
-    } else if (saved === "light") {
-      setTheme("light");
+    } else {
       document.documentElement.classList.remove("dark");
     }
   }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setTheme((prev) => {
       const next = prev === "light" ? "dark" : "light";
       if (next === "dark") {
@@ -39,7 +41,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       }
       return next;
     });
-  };
+  }, []);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -47,3 +49,4 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     </ThemeContext.Provider>
   );
 }
+
