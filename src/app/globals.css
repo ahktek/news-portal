@@ -1,0 +1,398 @@
+@import "tailwindcss";
+
+/* ─── TANGENT Design Tokens ───
+ * Publication: Independent tech-culture zine
+ * Voice: Sharp, opinionated, human
+ * Colours: Deep black, white, cobalt blue, warm gray, red accent, slate
+ * Type: Inter (display/UI), Merriweather (body), JetBrains Mono (utility)
+ * Signature: Full-viewport mega-lead story with diagonal clip
+ */
+
+@theme {
+  --color-accent-primary: #e11d48;
+  --color-accent-hover: #be123c;
+  --font-serif: "Merriweather", "Noto Serif Bengali", serif;
+  --font-sans: "Inter", "Noto Sans Bengali", sans-serif;
+  --font-display: "Inter", "Noto Sans Bengali", sans-serif;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-sans);
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.dark body {
+  background: #0b0f19;
+  color: #f8fafc;
+}
+
+/* Prose style for article body */
+.prose {
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #1a1a1a;
+}
+
+.prose p {
+  margin-bottom: 1.5rem;
+}
+
+.prose strong {
+  font-weight: 700;
+}
+
+/* Reading width */
+.reading-width {
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--color-tangent-cobalt);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Skip to content */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: var(--color-tangent-cobalt);
+  color: white;
+  font-weight: 600;
+  transition: top 0.2s;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Mega-lead diagonal clip */
+.clip-diagonal {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 85%);
+}
+
+/* Category tag */
+.category-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--color-tangent-cobalt);
+  color: white;
+  transition: opacity 0.15s;
+}
+
+.category-tag:hover {
+  opacity: 0.85;
+}
+
+/* Article card */
+.article-card {
+  transition: transform 0.15s;
+}
+
+.article-card:hover {
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-card {
+    transition: none;
+  }
+  .article-card:hover {
+    transform: none;
+  }
+}
+
+/* Article card image placeholder */
+.card-image-placeholder {
+  background: linear-gradient(135deg, var(--color-tangent-cobalt) 0%, #ff5c57 100%);
+  height: 12rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination a,
+.pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.pagination a {
+  background: var(--color-tangent-warm);
+  color: var(--color-tangent-black);
+  text-decoration: none;
+}
+
+.pagination a:hover {
+  background: var(--color-tangent-border);
+}
+
+.pagination .active {
+  background: var(--color-tangent-cobalt);
+  color: white;
+}
+
+/* Comment styles */
+.comment-bubble {
+  border-left: 3px solid var(--color-tangent-cobalt);
+  padding-left: 1rem;
+}
+
+/* Admin styles */
+.admin-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-tangent-border);
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  transition: border-color 0.15s;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: var(--color-tangent-cobalt);
+  box-shadow: 0 0 0 3px rgba(26, 58, 255, 0.1);
+}
+
+.admin-btn {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.admin-btn:hover {
+  opacity: 0.9;
+}
+
+.admin-btn-primary {
+  background: var(--color-tangent-cobalt);
+  color: white;
+}
+
+.admin-btn-danger {
+  background: var(--color-tangent-red);
+  color: white;
+}
+
+/* Search results */
+.search-highlight {
+  background: rgba(225, 45, 39, 0.1);
+  border-bottom: 2px solid var(--color-tangent-cobalt);
+}
+
+/* Responsive tables */
+@media (max-width: 640px) {
+  .admin-table {
+    font-size: 0.75rem;
+  }
+  .admin-table th,
+  .admin-table td {
+    padding: 0.5rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in {
+    animation: none;
+  }
+}
+
+/* Announcement banner */
+.announcement-banner {
+  background: var(--color-tangent-black);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.dark .announcement-banner {
+  background: #1c1c24;
+  color: #a1a1aa;
+}
+
+/* Signature: the cobalt rule */
+.cobalt-rule {
+  width: 4rem;
+  height: 3px;
+  background: var(--color-tangent-cobalt);
+  border: 0;
+}
+
+/* Category link hover */
+.category-link {
+  position: relative;
+  text-decoration: none;
+  color: var(--color-tangent-black);
+  font-weight: 600;
+}
+
+.category-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-tangent-cobalt);
+  transition: width 0.2s;
+}
+
+.category-link:hover::after {
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .category-link::after {
+    transition: none;
+  }
+  .category-link:hover::after {
+    width: 100%;
+  }
+}
+
+/* Article body styles */
+.article-body h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.article-body blockquote {
+  border-left: 3px solid var(--color-tangent-cobalt);
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: #444;
+}
+
+.article-body p {
+  margin-bottom: 1.5rem;
+}
+
+/* Reading time badge */
+.reading-time {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-tangent-slate);
+  letter-spacing: 0.03em;
+}
+
+/* ─── Premium Editorial Page Turn Animation ─── */
+.page-turn-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.page-turn-sheet {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 140%;
+  transform: skewX(-12deg);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.15);
+}
+
+.page-turn-sheet.sheet-1 {
+  background: var(--color-accent-primary); /* Primary red accent leaf */
+  z-index: 10;
+  animation: slideOutRight 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.page-turn-sheet.sheet-2 {
+  background: #fdfbf7;
+  z-index: 9;
+  animation: slideOutRight 0.95s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.dark .page-turn-sheet.sheet-2 {
+  background: #27272a;
+}
+
+.page-content-fade {
+  animation: contentFadeIn 0.7s ease-out forwards;
+}
+
+@keyframes slideOutRight {
+  0% {
+    left: -140%;
+  }
+  100% {
+    left: 140%;
+  }
+}
+
+@keyframes contentFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  30% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
