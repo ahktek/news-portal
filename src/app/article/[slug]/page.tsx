@@ -6,6 +6,9 @@ import { notFound } from "next/navigation";
 import CommentSection from "@/components/CommentSection";
 import ArticleCard from "@/components/ArticleCard";
 
+export const revalidate = 60;
+export const dynamic = "force-dynamic";
+
 export default async function ArticlePage({
   params,
 }: {

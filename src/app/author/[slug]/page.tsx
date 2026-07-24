@@ -4,6 +4,9 @@ import { formatDate } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import Pagination from "@/components/Pagination";
 
+export const revalidate = 60;
+export const dynamic = "force-dynamic";
+
 const ITEMS_PER_PAGE = 8;
 
 export default async function AuthorPage({
