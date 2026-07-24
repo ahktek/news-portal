@@ -1,30 +1,35 @@
 "use client";
+
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback, useRef } from "react";
 
-const ANIM_DURATION = 850;
+const MIN_ANIMATION_TIME = 400; // Minimum duration for smooth visual transition
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+
   const [animating, setAnimating] = useState(false);
-  const [displayChildren, setDisplayChildren] = useState(children);
-  const initialRender = useRef(true);
+  const animStartTime = useRef<number>(0);
+  const prevPathname = useRef<string>(pathname);
 
+  // When pathname changes (Next.js finished loading the new route), dismiss the overlay
   useEffect(() => {
-    if (initialRender.current) {
-      initialRender.current = false;
-      setAnimating(true);
-      const t = setTimeout(() => setAnimating(false), ANIM_DURATION);
-      return () => clearTimeout(t);
+    if (prevPathname.current !== pathname) {
+      prevPathname.current = pathname;
+      
+      const elapsed = Date.now() - animStartTime.current;
+      const remaining = Math.max(0, MIN_ANIMATION_TIME - elapsed);
+
+      const timer = setTimeout(() => {
+        setAnimating(false);
+      }, remaining);
+
+      return () => clearTimeout(timer);
     }
-  }, []);
+  }, [pathname]);
 
-  useEffect(() => {
-    setDisplayChildren(children);
-  }, [pathname, children]);
-
-  // Prefetch on hover so the route is cached before click
+  // Prefetch on hover (mouseover)
   const handleMouseEnter = useCallback((e: MouseEvent) => {
     const anchor = (e.target as HTMLElement).closest("a");
     if (!anchor) return;
@@ -42,6 +47,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
     router.prefetch(href);
   }, [router]);
 
+  // Handle link clicks: start overlay and router.push simultaneously
   const handleClick = useCallback(
     (e: MouseEvent) => {
       const anchor = (e.target as HTMLElement).closest("a");
@@ -60,12 +66,10 @@ export default function PageTransition({ children }: { children: React.ReactNode
       if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
       if (href === pathname) return;
 
-      e.preventDefault();
-      e.stopPropagation();
-
+      // Start transition and trigger route change simultaneously
+      animStartTime.current = Date.now();
       setAnimating(true);
       router.push(href);
-      setTimeout(() => setAnimating(false), ANIM_DURATION);
     },
     [pathname, router]
   );
@@ -89,10 +93,11 @@ export default function PageTransition({ children }: { children: React.ReactNode
           <div className="page-turn-sheet sheet-2"></div>
         </div>
       )}
-      <div className="page-content-fade">
-        {displayChildren}
+      <div key={pathname} className="page-content-fade">
+        {children}
       </div>
     </>
   );
 }
+
 
