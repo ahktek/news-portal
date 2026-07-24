@@ -24,6 +24,15 @@ export default function PageTransition({ children }: { children: React.ReactNode
     setDisplayChildren(children);
   }, [pathname, children]);
 
+  // Prefetch on hover so the route is cached before click
+  const handleMouseEnter = useCallback((e: MouseEvent) => {
+    const anchor = (e.target as HTMLElement).closest("a");
+    if (!anchor) return;
+    const href = anchor.getAttribute("href");
+    if (!href || href.startsWith("http") || href.startsWith("#")) return;
+    router.prefetch(href);
+  }, [router]);
+
   const handleClick = useCallback(
     (e: MouseEvent) => {
       const anchor = (e.target as HTMLElement).closest("a");
@@ -45,22 +54,33 @@ export default function PageTransition({ children }: { children: React.ReactNode
       e.preventDefault();
       e.stopPropagation();
 
-      // 1. Start animation
       setAnimating(true);
-
-      // 2. Navigate immediately — don't wait for animation
       router.push(href);
-
-      // 3. End animation overlay after full duration
       setTimeout(() => setAnimating(false), ANIM_DURATION);
     },
     [pathname, router]
   );
 
   useEffect(() => {
+    document.addEventListener("mouseover", handleMouseEnter, true);
     document.addEventListener("click", handleClick, true);
-    return () => document.removeEventListener("click", handleClick, true);
-  }, [handleClick]);
+    return () => {
+      document.removeEventListener("mouseover", handleMouseEnter, true);
+      document.removeEventListener("click", handleClick, true);
+    };
+  }, [handleClick, handleMouseEnter]);
+
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    const anchor = (e.target as HTMLElement).closest("a");
+    if (!anchor) return;
+    const href = anchor.getAttribute("href");
+    if (!href || href.startsWith("http") || href.startsWith("#")) return;
+    router.prefetch(href);
+  }, [router]);
+
+  // in the effect:
+  document.addEventListener("touchstart", handleTouchStart, true);
+  // cleanup too
 
   return (
     <>
@@ -75,4 +95,6 @@ export default function PageTransition({ children }: { children: React.ReactNode
       </div>
     </>
   );
+
 }
+
