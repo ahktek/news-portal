@@ -3,17 +3,18 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback, useRef } from "react";
 
-const ANIM_DURATION = 850;
+// Configurable transition animation duration (in milliseconds)
+// Adjust this single value to make the visual animation longer or shorter (e.g., 1200ms, 1500ms)
+const ANIM_DURATION = 1200;
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [animating, setAnimating] = useState(false);
-  const [displayChildren, setDisplayChildren] = useState(children);
-  const pendingChildren = useRef<React.ReactNode>(null);
   const animTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const initialRender = useRef(true);
 
+  // Play entrance animation on initial load
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false;
@@ -25,28 +26,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
     }
   }, []);
 
-  // When new children arrive (page loaded), stash them
-  // If animation is still running, wait for it to finish before swapping
-  useEffect(() => {
-    if (animating) {
-      // Page loaded while animation is still going — queue the swap
-      pendingChildren.current = children;
-    } else {
-      // Animation already done, swap immediately
-      setDisplayChildren(children);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, children]);
-
-  // When animation ends, flush any pending children
-  const endAnimation = useCallback(() => {
-    setAnimating(false);
-    if (pendingChildren.current !== null) {
-      setDisplayChildren(pendingChildren.current);
-      pendingChildren.current = null;
-    }
-  }, []);
-
+  // Prefetch route on hover
   const handleMouseOver = useCallback((e: MouseEvent) => {
     const anchor = (e.target as HTMLElement).closest("a");
     if (!anchor) return;
@@ -55,6 +35,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
     router.prefetch(href);
   }, [router]);
 
+  // Click handler: navigate instantly and trigger independent overlay animation
   const handleClick = useCallback(
     (e: MouseEvent) => {
       const anchor = (e.target as HTMLElement).closest("a");
@@ -76,17 +57,17 @@ export default function PageTransition({ children }: { children: React.ReactNode
       e.preventDefault();
       e.stopPropagation();
 
-      // Clear any previous timer
-      if (animTimerRef.current) clearTimeout(animTimerRef.current);
-      pendingChildren.current = null;
-
-      setAnimating(true);
+      // 1. Instantly trigger Next.js App Router navigation
       router.push(href);
 
-      // End animation after duration — endAnimation will flush children if ready
-      animTimerRef.current = setTimeout(endAnimation, ANIM_DURATION);
+      // 2. Play independent visual transition animation simultaneously
+      if (animTimerRef.current) clearTimeout(animTimerRef.current);
+      setAnimating(true);
+      animTimerRef.current = setTimeout(() => {
+        setAnimating(false);
+      }, ANIM_DURATION);
     },
-    [pathname, router, endAnimation]
+    [pathname, router]
   );
 
   useEffect(() => {
@@ -101,17 +82,22 @@ export default function PageTransition({ children }: { children: React.ReactNode
   return (
     <>
       {animating && (
-        <div className="page-turn-overlay" aria-hidden="true">
+        <div
+          className="page-turn-overlay"
+          aria-hidden="true"
+          style={{ "--anim-duration": `${ANIM_DURATION}ms` } as React.CSSProperties}
+        >
           <div className="page-turn-sheet sheet-1"></div>
           <div className="page-turn-sheet sheet-2"></div>
         </div>
       )}
-      <div className="page-content-fade">
-        {displayChildren}
+      <div key={pathname} className="page-content-fade">
+        {children}
       </div>
     </>
   );
 }
+
 
 
 
