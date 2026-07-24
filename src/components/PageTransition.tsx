@@ -1,19 +1,16 @@
 "use client";
-
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback, useRef } from "react";
 
-const ANIM_DURATION = 850; // ms — matches CSS animation length
+const ANIM_DURATION = 850;
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [animating, setAnimating] = useState(false);
   const [displayChildren, setDisplayChildren] = useState(children);
-  const pendingHref = useRef<string | null>(null);
   const initialRender = useRef(true);
 
-  // On first mount, play the entrance animation once
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false;
@@ -23,54 +20,39 @@ export default function PageTransition({ children }: { children: React.ReactNode
     }
   }, []);
 
-  // When pathname changes (after navigation completes), update displayed children
   useEffect(() => {
     setDisplayChildren(children);
   }, [pathname, children]);
 
-  // Global click interceptor — catch all internal <a> clicks
   const handleClick = useCallback(
     (e: MouseEvent) => {
       const anchor = (e.target as HTMLElement).closest("a");
       if (!anchor) return;
-
       const href = anchor.getAttribute("href");
       if (!href) return;
 
-      // Skip external links, anchors, mailto, tel, etc.
       if (
         href.startsWith("http") ||
         href.startsWith("mailto:") ||
         href.startsWith("tel:") ||
         href.startsWith("#") ||
         anchor.target === "_blank"
-      ) {
-        return;
-      }
+      ) return;
 
-      // Skip if modifier keys held (new tab, etc.)
       if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
-
-      // Skip if same page
       if (href === pathname) return;
 
-      // Prevent default navigation, play animation, then navigate
       e.preventDefault();
       e.stopPropagation();
 
-      pendingHref.current = href;
+      // 1. Start animation
       setAnimating(true);
 
-      // Navigate partway through the animation (after sheets cover the screen)
-      setTimeout(() => {
-        router.push(pendingHref.current!);
-        pendingHref.current = null;
-      }, 10);
+      // 2. Navigate immediately — don't wait for animation
+      router.push(href);
 
-      // End animation after full duration
-      setTimeout(() => {
-        setAnimating(false);
-      }, ANIM_DURATION);
+      // 3. End animation overlay after full duration
+      setTimeout(() => setAnimating(false), ANIM_DURATION);
     },
     [pathname, router]
   );
