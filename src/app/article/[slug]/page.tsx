@@ -3,11 +3,59 @@ import Image from "next/image";
 import { getArticleById, getArticles } from "@/lib/articles";
 import { formatDate, getCategoryBadgeClasses } from "@/lib/utils";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import CommentSection from "@/components/CommentSection";
 import ArticleCard from "@/components/ArticleCard";
 
 export const revalidate = 60;
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const decodedSlug = decodeURIComponent(slug);
+  const article = await getArticleById(decodedSlug);
+
+  if (!article) {
+    return {
+      title: "পাওয়া যায়নি — ট্যানজেন্ট",
+      description: "এই নিবন্ধটি পাওয়া যায়নি।",
+    };
+  }
+
+  const title = `${article.title} — ট্যানজেন্ট`;
+  const description = article.excerpt || article.title;
+  const imageUrl =
+    article.image_url ||
+    "https://tangentnews.vercel.app/og-default.png";
+  const url = `https://tangentnews.vercel.app/article/${decodedSlug}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "ট্যানজেন্ট",
+      images: [{ url: imageUrl, width: 1200, height: 630 }],
+      type: "article",
+      locale: "bn_BD",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
+    alternates: {
+      canonical: url,
+    },
+  };
+}
 
 export default async function ArticlePage({
   params,

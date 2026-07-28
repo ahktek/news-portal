@@ -7,8 +7,33 @@ import BackToTop from "@/components/BackToTop";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "ট্যানজেন্ট — সংবাদ ও বিশ্লেষণ",
+  metadataBase: new URL("https://tangentnews.vercel.app"),
+  title: {
+    default: "ট্যানজেন্ট — সংবাদ ও বিশ্লেষণ",
+    template: "%s — ট্যানজেন্ট",
+  },
   description: "বাংলাদেশ ও বৈশ্বিক রাজনীতি, অর্থনীতি, ক্রীড়া এবং সমসাময়িক বিষয়ের নিরপেক্ষ ও বস্তুনিষ্ঠ বিশ্লেষণ।",
+  openGraph: {
+    type: "website",
+    siteName: "ট্যানজেন্ট",
+    title: "ট্যানজেন্ট — সংবাদ ও বিশ্লেষণ",
+    description: "বাংলাদেশ ও বৈশ্বিক রাজনীতি, অর্থনীতি, ক্রীড়া এবং সমসাময়িক বিষয়ের নিরপেক্ষ ও বস্তুনিষ্ঠ বিশ্লেষণ।",
+    images: [{ url: "/og-default.png", width: 1200, height: 630 }],
+    locale: "bn_BD",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ট্যানজেন্ট — সংবাদ ও বিশ্লেষণ",
+    description: "বাংলাদেশ ও বৈশ্বিক রাজনীতি, অর্থনীতি, ক্রীড়া এবং সমসাময়িক বিষয়ের নিরপেক্ষ ও বস্তুনিষ্ঠ বিশ্লেষণ।",
+    images: ["/og-default.png"],
+  },
+  alternates: {
+    canonical: "https://tangentnews.vercel.app",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

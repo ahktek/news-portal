@@ -2,9 +2,9 @@ import { supabase, isPlaceholder } from './supabase'
 
 export interface Article {
   id: string | number
-  source_url: string
+  source_url?: string
   title: string
-  content: string
+  content?: string
   category: 'National' | 'Politics' | 'Economics' | 'International' | 'Sports' | 'Entertainment' | 'Feature' | 'Tech'
   image_url: string
   created_at: string
@@ -105,7 +105,7 @@ export async function getArticles(category?: string, page: number = 1, pageSize:
   if (isPlaceholder) return []
 
   try {
-    let query = supabase.from('articles').select('*')
+    let query = supabase.from('articles').select('id, title, category, image_url, created_at')
     
     if (category) {
       query = query.ilike('category', category)
@@ -159,7 +159,7 @@ export async function getLatestArticles(limit: number = 10): Promise<FrontendArt
   try {
     const { data, error } = await supabase
       .from('articles')
-      .select('*')
+      .select('id, title, category, image_url, created_at')
       .order('created_at', { ascending: false })
       .limit(limit)
     
@@ -196,14 +196,33 @@ export async function getArticlesCount(category?: string): Promise<number> {
   }
 }
 
+/**
+ * Full-text search for articles by title.
+ * 
+ * Recommended PostgreSQL full-text search index for production:
+ * 
+ *   CREATE INDEX idx_articles_title_fts ON articles
+ *     USING gin(to_tsvector('english', title));
+ * 
+ * Then replace ILIKE with:
+ *   .textSearch('title', query, { type: 'plain', config: 'english' })
+ * 
+ * For Bengali content, use 'simple' config and add a tsvector column:
+ *   ALTER TABLE articles ADD COLUMN title_tsv tsvector;
+ *   CREATE INDEX idx_articles_title_bn ON articles USING gin(title_tsv);
+ *   CREATE TRIGGER trg_title_tsv BEFORE INSERT OR UPDATE ON articles
+ *     FOR EACH ROW EXECUTE FUNCTION
+ *     tsvector_update_trigger(title_tsv, 'pg_catalog.simple', title);
+ */
 export async function searchArticles(query: string): Promise<FrontendArticle[]> {
   if (isPlaceholder) return []
 
   try {
     const { data, error } = await supabase
       .from('articles')
-      .select('*')
+      .select('id, title, category, image_url, created_at')
       .ilike('title', `%${query}%`)
+      .limit(20)
       .order('created_at', { ascending: false })
     
     if (error) {
