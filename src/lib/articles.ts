@@ -45,7 +45,7 @@ export const categories: Category[] = [
   { id: "international", name: "আন্তর্জাতিক", slug: "international", description: "বিশ্ব রাজনীতি ও আন্তর্জাতিক অঙ্গনের ঘটনাপ্রবাহ" },
   { id: "sports", name: "খেলা", slug: "sports", description: "ক্রিকেট, ফুটবল ও অন্যান্য খেলার আপডেট ও বিশ্লেষণ" },
   { id: "entertainment", name: "বিনোদন", slug: "entertainment", description: "চলচ্চিত্র, নাটক, সঙ্গীত ও সংস্কৃতি জগতের খবরাখবর" },
-  { id: "feature", name: "features", slug: "feature", description: "বিশেষ প্রতিবেদন, স্মৃতিচারণ ও দীর্ঘ বিশ্লেষণমূলক লেখা" },
+  { id: "feature", name: "ফিচার", slug: "feature", description: "বিশেষ প্রতিবেদন, স্মৃতিচারণ ও দীর্ঘ বিশ্লেষণমূলক লেখা" },
   { id: "tech", name: "প্রযুক্তি", slug: "tech", description: "বিজ্ঞান, তথ্যপ্রযুক্তি ও গ্যাজেট সম্পর্কিত নতুন সংবাদ" }
 ]
 
@@ -99,13 +99,11 @@ export function mapArticle(article: Article): FrontendArticle {
   }
 }
 
-export const revalidate = 60;
-
 export async function getArticles(category?: string, page: number = 1, pageSize: number = 10): Promise<FrontendArticle[]> {
   if (isPlaceholder) return []
 
   try {
-    let query = supabase.from('articles').select('id, title, category, image_url, created_at')
+    let query = supabase.from('articles').select('id, title, category, image_url, created_at, content')
     
     if (category) {
       query = query.ilike('category', category)
@@ -159,7 +157,7 @@ export async function getLatestArticles(limit: number = 10): Promise<FrontendArt
   try {
     const { data, error } = await supabase
       .from('articles')
-      .select('id, title, category, image_url, created_at')
+      .select('id, title, category, image_url, created_at, content')
       .order('created_at', { ascending: false })
       .limit(limit)
     
@@ -220,7 +218,7 @@ export async function searchArticles(query: string): Promise<FrontendArticle[]> 
   try {
     const { data, error } = await supabase
       .from('articles')
-      .select('id, title, category, image_url, created_at')
+      .select('id, title, category, image_url, created_at, content')
       .ilike('title', `%${query}%`)
       .limit(20)
       .order('created_at', { ascending: false })

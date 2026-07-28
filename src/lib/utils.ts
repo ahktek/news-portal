@@ -33,10 +33,6 @@ export function formatDate(dateStr: string): string {
   return `${day} ${monthName} ${year}`;
 }
 
-export function formatDateShort(dateStr: string): string {
-  return formatDate(dateStr);
-}
-
 export function calculateReadingTime(body: string): number {
   const wordsPerMinute = 200;
   const words = body.split(/\s+/).length;
@@ -80,19 +76,19 @@ export function getCategoryBadgeClasses(slug: string): string {
   switch (slug) {
     case "politics":
       return "bg-red-600 text-white";
-    case "economy":
+    case "economics":
       return "bg-emerald-600 text-white";
     case "international":
       return "bg-blue-600 text-white";
     case "sports":
       return "bg-orange-500 text-white";
-    case "sci-tech":
+    case "tech":
       return "bg-purple-600 text-white";
     case "entertainment":
       return "bg-pink-600 text-white";
     case "national":
       return "bg-cyan-600 text-white";
-    case "features":
+    case "feature":
       return "bg-amber-600 text-white";
     default:
       return "bg-rose-600 text-white";

@@ -1,5 +1,7 @@
 import { getLatestArticles } from "@/lib/articles";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const siteUrl = "https://tangent.news";
   const escapedXml = (s: string) =>

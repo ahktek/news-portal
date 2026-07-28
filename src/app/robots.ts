@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/feed.xml'],
+      disallow: [],
     },
     sitemap: 'https://tangentnews.vercel.app/sitemap.xml',
   };

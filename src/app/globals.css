@@ -13,9 +13,14 @@
 @theme {
   --color-accent-primary: #e11d48;
   --color-accent-hover: #be123c;
+  --color-tangent-cobalt: #1d4ed8;
+  --color-tangent-black: #0f172a;
+  --color-tangent-red: #dc2626;
+  --color-tangent-slate: #64748b;
   --font-serif: "Merriweather", "Noto Serif Bengali", serif;
   --font-sans: "Inter", "Noto Sans Bengali", sans-serif;
   --font-display: "Inter", "Noto Sans Bengali", sans-serif;
+  --font-body: "Merriweather", "Noto Serif Bengali", serif;
 }
 
 /* Base styles */

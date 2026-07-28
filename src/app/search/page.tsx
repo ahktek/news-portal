@@ -1,6 +1,8 @@
 import { searchArticles } from "@/lib/articles";
 import ArticleCard from "@/components/ArticleCard";
 
+export const dynamic = "force-dynamic";
+
 export default async function SearchPage({
   searchParams,
 }: {

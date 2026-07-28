@@ -1,7 +1,9 @@
 import { MetadataRoute } from 'next';
-import { getArticles } from '@/lib/articles';
+import { supabase } from '@/lib/supabase';
 
 const BASE_URL = 'https://tangentnews.vercel.app';
+
+export const revalidate = 3600;
 
 const staticPages: MetadataRoute.Sitemap = [
   {
@@ -23,11 +25,17 @@ const staticPages: MetadataRoute.Sitemap = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const articles = await getArticles(undefined, 1, 999);
+    const { data, error } = await supabase
+      .from('articles')
+      .select('id, created_at')
+      .order('created_at', { ascending: false })
+      .limit(500);
 
-    const articleEntries: MetadataRoute.Sitemap = articles.map((article) => ({
-      url: `${BASE_URL}/article/${article.slug}`,
-      lastModified: article.publishedAt,
+    if (error) throw error;
+
+    const articleEntries: MetadataRoute.Sitemap = (data || []).map((article: { id: string | number; created_at: string }) => ({
+      url: `${BASE_URL}/article/${String(article.id)}`,
+      lastModified: article.created_at,
       changeFrequency: 'daily' as const,
       priority: 0.8,
     }));
