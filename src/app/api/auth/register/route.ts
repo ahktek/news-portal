@@ -126,8 +126,14 @@ export async function POST(request: NextRequest) {
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('Register route error:', message);
+    // Include the actual error so we can diagnose env-var issues
+    const hasKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const hasUrl = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
     return NextResponse.json(
-      { error: 'Registration failed — server configuration error.' },
+      {
+        error: `Registration failed — ${message}`,
+        debug: { hasServiceKey: hasKey, hasUrl, keyLength: hasKey ? process.env.SUPABASE_SERVICE_ROLE_KEY!.length : 0 },
+      },
       { status: 500 },
     );
   }
