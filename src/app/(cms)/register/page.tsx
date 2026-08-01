@@ -251,14 +251,6 @@ export default function RegisterPage() {
         <div className="bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm p-6 sm:p-8">
           <hr className="cobalt-rule mb-6" aria-hidden="true" />
 
-          {/* Email verification notice */}
-          <div className="mb-5 rounded-lg border border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/40 px-4 py-3 text-xs text-blue-700 dark:text-blue-300 flex items-start gap-2">
-            <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>A verification email will be sent to your address. You can verify now or later — your account will work immediately regardless.</span>
-          </div>
-
           {serverError && (
             <div
               role="alert"

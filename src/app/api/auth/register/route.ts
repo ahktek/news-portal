@@ -17,6 +17,7 @@ import { rateLimit, getClientIP } from '@/lib/rate-limit';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: NextRequest) {
+  try {
   // ── Rate limiting: 5 attempts per minute per IP ──
   const ip = getClientIP(request);
   const limit = rateLimit(ip, 5, 60_000);
@@ -58,26 +59,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: errors.join('; ') }, { status: 400 });
   }
 
-  // ── Create user via signUp (sends verification email) + auto-confirm ──
-  // signUp() triggers Supabase's built-in verification-email flow so the user
-  // receives a confirmation link. We then call the admin API to confirm the
-  // account immediately — the user can log in right away without waiting for
-  // the email, but the email is still sent as a record / fallback.
+  // ── Create confirmed user directly (no email verification) ──
   const validEmail = email!.trim().toLowerCase();
   const validDisplayName = display_name!.trim();
 
-  const { data: signUpData, error: signUpError } = await supabaseAdmin.auth.signUp({
+  const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email: validEmail,
     password: password!,
-    options: {
-      data: { display_name: validDisplayName },
-    },
+    email_confirm: true,
+    user_metadata: { display_name: validDisplayName },
   });
 
-  if (signUpError) {
-    console.error('Supabase Auth signUp error:', signUpError.message);
+  if (authError) {
+    console.error('Supabase Auth createUser error:', authError.message);
     const alreadyExists =
-      /already|registered|exists/i.test(signUpError.message);
+      /already|registered|exists/i.test(authError.message);
     return NextResponse.json(
       {
         error: alreadyExists
@@ -88,30 +84,19 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (!signUpData.user) {
+  if (!authData.user) {
     return NextResponse.json(
       { error: 'Registration failed — no user returned' },
       { status: 500 },
     );
   }
 
-  // Auto-confirm so the user can log in immediately (the verification email
-  // is still sent by signUp above — this just removes the login block).
-  const { error: confirmError } = await supabaseAdmin.auth.admin.updateUserById(
-    signUpData.user.id,
-    { email_confirm: true },
-  );
-  if (confirmError) {
-    console.error('Auto-confirm error:', confirmError.message);
-    // Non-fatal: the user can still verify via the email link.
-  }
-
   // ── Insert profile into public.users ──
   const { error: profileError } = await supabaseAdmin
     .from('users')
     .insert({
-      id: signUpData.user.id,
-      email: signUpData.user.email!,
+      id: authData.user.id,
+      email: authData.user.email!,
       display_name: validDisplayName,
       role: 'author',
     });
@@ -119,7 +104,7 @@ export async function POST(request: NextRequest) {
   if (profileError) {
     console.error('Profile insert error:', profileError.message);
     // Clean up: delete the auth user since profile insert failed
-    await supabaseAdmin.auth.admin.deleteUser(signUpData.user.id);
+    await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
     return NextResponse.json(
       { error: 'Registration failed — could not create profile' },
       { status: 500 },
@@ -130,12 +115,20 @@ export async function POST(request: NextRequest) {
     {
       success: true,
       user: {
-        id: signUpData.user.id,
-        email: signUpData.user.email,
+        id: authData.user.id,
+        email: authData.user.email,
         display_name: validDisplayName,
         role: 'author',
       },
     },
     { status: 201 },
   );
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    console.error('Register route error:', message);
+    return NextResponse.json(
+      { error: 'Registration failed — server configuration error.' },
+      { status: 500 },
+    );
+  }
 }

@@ -14,6 +14,7 @@ import { rateLimit, getClientIP } from '@/lib/rate-limit';
  */
 
 export async function POST(request: NextRequest) {
+  try {
   // ── Rate limiting: 5 attempts per minute per IP ──
   const ip = getClientIP(request);
   const limit = rateLimit(ip, 5, 60_000);
@@ -89,4 +90,12 @@ export async function POST(request: NextRequest) {
       role: profile?.role ?? 'author',
     },
   });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    console.error('Login route error:', message);
+    return NextResponse.json(
+      { error: 'Login failed — server configuration error.' },
+      { status: 500 },
+    );
+  }
 }

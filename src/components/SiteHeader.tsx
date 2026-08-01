@@ -77,7 +77,7 @@ export default function SiteHeader() {
           </Link>
 
           {/* Subscribe & Login buttons */}
-          <div className="flex items-center justify-end gap-3 md:w-1/4">
+          <div className="flex items-center justify-end gap-3 md:w-1/4" suppressHydrationWarning>
             <button className="text-xs font-extrabold bg-accent-primary text-white hover:bg-accent-hover px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-xs transition-all duration-200">
               সাবস্ক্রাইব
             </button>

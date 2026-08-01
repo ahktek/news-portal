@@ -214,10 +214,6 @@ export default function LoginPage() {
                   Forgot password?
                 </a>
               </div>
-              <p className="mt-1 text-[0.7rem] text-slate-400 dark:text-slate-500 text-right">
-                Didn&apos;t get the verification email? Check spam or{" "}
-                <a href="/register" className="text-accent-primary hover:underline font-semibold">re-register</a>.
-              </p>
             </div>
 
             {/* Submit */}
