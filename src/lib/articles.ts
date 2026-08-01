@@ -93,7 +93,7 @@ export function mapArticle(article: Article): FrontendArticle {
     readingTime: Math.ceil(wordCount / 200),
     featured: false,
     category: mappedCategory,
-    author: { name: 'বাংলানিউজ ডেস্ক', slug: 'desk', bio: '', avatarUrl: '' },
+    author: { name: 'TANGENT Desk', slug: 'desk', bio: '', avatarUrl: '' },
     tags: [],
     image_url: finalImageUrl
   }

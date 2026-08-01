@@ -24,9 +24,9 @@ export default async function AuthorPage({
   }
 
   const author = {
-    name: "বাংলানিউজ ডেস্ক",
+    name: "TANGENT Desk",
     slug: "desk",
-    bio: "ট্যানজেন্ট-এর জ্যেষ্ঠ সাংবাদিক ও রাজনৈতিক বিশ্লেষক। সমসাময়িক বিষয়াবলী ও গ্লোবাল ট্রেড নিয়ে নিয়মিত কলাম লিখছেন।",
+    bio: "TANGENT editorial desk — independent news and analysis.",
     avatarUrl: "https://api.dicebear.com/9.x/avataaars/svg?seed=desk",
   };
 

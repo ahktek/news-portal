@@ -198,7 +198,7 @@ export default async function ArticlePage({
                 {article.author.name}
               </h4>
               <p className="mt-1 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                {article.author.bio || "ট্যানজেন্ট-এর জ্যেষ্ঠ সাংবাদিক ও রাজনৈতিক বিশ্লেষক। সমসাময়িক বিষয়াবলী ও গ্লোবাল ট্রেড নিয়ে নিয়মিত কলাম লিখছেন।"}
+                {article.author.bio || "TANGENT editorial desk — independent news and analysis."}
               </p>
             </div>
           </div>

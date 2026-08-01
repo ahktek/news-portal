@@ -75,6 +75,11 @@ body {
   border-radius: 2px;
 }
 
+/* Brighter focus outline on dark backgrounds so it stays visible. */
+.dark *:focus-visible {
+  outline-color: #93c5fd;
+}
+
 /* Skip to content */
 .skip-to-content {
   position: absolute;
@@ -267,8 +272,54 @@ body {
   animation: fadeIn 0.3s ease-out;
 }
 
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-toast-in {
+  animation: toastIn 0.2s ease-out;
+}
+
+@keyframes modalBackdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-modal-backdrop-in {
+  animation: modalBackdropIn 0.15s ease-out;
+}
+
+@keyframes modalCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-modal-card-in {
+  animation: modalCardIn 0.2s ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-in {
+  .animate-fade-in,
+  .animate-toast-in,
+  .animate-modal-backdrop-in,
+  .animate-modal-card-in {
     animation: none;
   }
 }

@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
 import BackToTop from "@/components/BackToTop";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AuthProvider } from "@/lib/useAuth";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tangentnews.vercel.app"),
@@ -70,20 +71,22 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100 transition-colors duration-300">
         <ThemeProvider>
-          <a href="#main-content" className="skip-to-content">
-            সরাসরি মূল কনটেন্টে যান
-          </a>
-          <div className="announcement-banner">
-            ট্যানজেন্ট — স্বাধীন ও নিরপেক্ষ সংবাদ মাধ্যম। কোনো পেওয়াল নেই, কোনো ট্র্যাকার নেই।
-          </div>
-          <SiteHeader />
-          <main id="main-content" className="flex-1">
-            <PageTransition>
-              {children}
-            </PageTransition>
-          </main>
-          <Footer />
-          <BackToTop />
+          <AuthProvider>
+            <a href="#main-content" className="skip-to-content">
+              সরাসরি মূল কনটেন্টে যান
+            </a>
+            <div className="announcement-banner">
+              ট্যানজেন্ট — স্বাধীন ও নিরপেক্ষ সংবাদ মাধ্যম। কোনো পেওয়াল নেই, কোনো ট্র্যাকার নেই।
+            </div>
+            <SiteHeader />
+            <main id="main-content" className="flex-1">
+              <PageTransition>
+                {children}
+              </PageTransition>
+            </main>
+            <Footer />
+            <BackToTop />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

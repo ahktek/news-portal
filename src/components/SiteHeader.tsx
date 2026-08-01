@@ -5,11 +5,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { categories as mockCategories } from "@/lib/articles";
 import { useTheme } from "@/components/ThemeProvider";
+import { useAuth } from "@/lib/useAuth";
 
 export default function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
+  const { isLoggedIn } = useAuth();
 
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -79,9 +81,21 @@ export default function SiteHeader() {
             <button className="text-xs font-extrabold bg-accent-primary text-white hover:bg-accent-hover px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-xs transition-all duration-200">
               সাবস্ক্রাইব
             </button>
-            <button className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-accent-primary transition-colors hidden sm:block">
-              লগইন
-            </button>
+            {isLoggedIn ? (
+              <Link
+                href="/dashboard"
+                className="no-underline text-xs sm:text-sm font-extrabold text-slate-600 dark:text-slate-300 hover:text-accent-primary transition-colors hidden sm:block"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="no-underline text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-accent-primary transition-colors hidden sm:block"
+              >
+                Login
+              </Link>
+            )}
           </div>
 
         </div>
